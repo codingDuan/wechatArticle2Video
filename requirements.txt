@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+pytest
+python-dotenv
+boto3
+ffmpeg-python
+pydub
+openai
+google-generativeai
+torch
+torchaudio
+soundfile
+numpy<2.0
+demucs

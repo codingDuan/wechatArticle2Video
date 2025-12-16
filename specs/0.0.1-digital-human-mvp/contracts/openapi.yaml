@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: Digital Human MVP - Data Processing API
+  version: "1.0.0"
+  description: API for managing the asynchronous audio processing pipeline.
+
+paths:
+  /v1/processing/jobs:
+    post:
+      summary: Create a new audio processing job
+      operationId: create_processing_job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_uri:
+                  type: string
+                  description: "URI of the raw audio file to process (e.g., s3://bucket/raw/audio.mp4)."
+                  example: "s3://wechat-article-video/raw/livestream-01.mp4"
+      responses:
+        '202':
+          description: Job accepted for processing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    description: "A unique ID for the created job."
+                  status:
+                    type: string
+                    example: "pending"
+        '400':
+          description: Bad request, e.g., invalid source_uri.
+
+  /v1/processing/jobs/{job_id}:
+    get:
+      summary: Get the status of a processing job
+      operationId: get_job_status
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The current status and details of the job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    example: "processing"
+                  progress:
+                    type: number
+                    format: float
+                    example: 45.5
+                  details:
+                    type: string
+                    example: "Step 2 of 3: Segmenting speech..."
+        '404':
+          description: Job not found.
