@@ -13,3 +13,5 @@ torchaudio
 soundfile
 numpy<2.0
 demucs
+inaSpeechSegmenter
+tensorflow==2.12.0

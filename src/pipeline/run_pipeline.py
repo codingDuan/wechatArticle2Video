@@ -1,7 +1,10 @@
 # T015: Main orchestrator for the audio processing pipeline.
 
-import boto3
 import os
+# This MUST be set before any other imports, especially before tensorflow or torch
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+import boto3
 import sys
 
 # When running this script directly, add the project root to the Python path

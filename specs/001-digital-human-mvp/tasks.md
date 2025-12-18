@@ -36,7 +36,7 @@
 - [X] T008 [US1] 扩展 `src/pipeline/run_pipeline.py` 脚本，使其能接受本地文件路径作为输入，并自动将其上传到S3的原始数据桶中，返回S3 URI。
 - [X] T009 [P] [US1] 在 `src/pipeline/steps/step_01_extract_audio.py` 中编写脚本，使用 **FFmpeg** 从视频文件中提取原始音轨并转换为16-bit 44.1kHz WAV格式。
 - [X] T010 [P] [US1] 在 `src/pipeline/steps/step_02_vad_segment.py` 中编写脚本，使用 **Silero VAD** 对完整音轨进行初步切分，剔除长静音片段。
-- [X] T011 [P] [US1] 在 `src/pipeline/steps/step_03_separate_instrumentals.py` 中编写脚本，应用 **UVR5 (BS-Roformer)** 分离乐器伴奏。
+- [X] T011 [P] [US1] 在 `src/pipeline/steps/step_03_separate_instrumentals.py` 中编写脚本，应用 **Demucs (`htdemucs_ft` model)** 分离乐器伴奏。
 - [X] T012 [P] [US1] 在 `src/pipeline/steps/step_04_semantic_segment.py` 中编写脚本，应用 **inaSpeechSegmenter (smn引擎)** 进行语义分割，区分“说话声”与“歌声”。
 - [X] T013 [P] [US1] 在 `src/pipeline/steps/step_05_cut_and_filter.py` 中编写脚本，精确切出纯净的说话片段，并使用 **DNSMOS (P.808标准)** 进行质量评分，丢弃OVRL分数低于3.5的片段。
 - [X] T014 [P] [US1] 在 `src/pipeline/steps/step_06_normalize_audio.py` 中编写脚本，使用 **UVR-DeEcho-DeReverb模型** 进行去混响处理。
