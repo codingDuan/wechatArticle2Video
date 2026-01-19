@@ -1,35 +1,61 @@
 import os
 import json
+import openai
+from src.core.config import settings
 
-def transcribe_audio(audio_paths: list[str], output_dir: str) -> str:
+def transcribe_audio(audio_paths: list[str], output_dir: str, model_name: str = None) -> str:
     """
-    Transcribes a list of audio segments using FunASR and returns the path to the
-    consolidated transcription file.
+    Transcribes a list of audio segments using the OpenAI Whisper API and returns
+    the path to the consolidated transcription file.
+    
+    The model can be specified as a parameter or configured in the .env file
+    via OPENAI_WHISPER_MODEL.
+    """
+    api_key = settings.OPENAI_API_KEY
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
 
-    In a real scenario, this would involve:
-    1. Initializing the FunASR model from the FunASR library.
-    2. Iterating through each audio_path and running the model's inference.
-    3. Collecting the transcription results for each audio file.
-    4. Saving the transcriptions into a consolidated JSON or text file.
-    """
-    print(f"Starting transcription for {len(audio_paths)} audio segments using FunASR (placeholder)...")
+    client = openai.OpenAI(api_key=api_key)
+    
+    # Use the provided model_name or fall back to the one from settings
+    whisper_model = model_name if model_name else settings.OPENAI_WHISPER_MODEL
+    
+    print(f"Starting transcription for {len(audio_paths)} audio segments using OpenAI model: {whisper_model}...")
 
     transcriptions = []
-    for i, audio_path in enumerate(audio_paths):
-        # Placeholder transcription: Use the filename as the mock transcription text.
-        # This simulates generating a unique transcription for each segment.
-        transcription_text = f"This is a placeholder transcription for {os.path.basename(audio_path)}."
+    for audio_path in audio_paths:
+        print(f"  Transcribing {os.path.basename(audio_path)}...")
+        try:
+            with open(audio_path, "rb") as audio_file:
+                response = client.audio.transcriptions.create(
+                    model=whisper_model,
+                    file=audio_file,
+                    response_format="json" 
+                )
+            
+            transcription_text = response.text
+            
+            transcription_data = {
+                "audio_path": audio_path,
+                "transcription": transcription_text,
+                "model": whisper_model,
+                "details": dict(response) # Store full response for more details if needed
+            }
+            transcriptions.append(transcription_data)
+            print(f"  Successfully transcribed {os.path.basename(audio_path)}")
         
-        transcription_data = {
-            "audio_path": audio_path,
-            "transcription": transcription_text,
-            "timestamp": i * 15.5 # Placeholder timestamp
-        }
-        transcriptions.append(transcription_data)
-        print(f"  Transcribed {os.path.basename(audio_path)}")
+        except Exception as e:
+            print(f"  Error transcribing {os.path.basename(audio_path)}: {e}")
+            # Optionally, add an error record to the output file
+            error_data = {
+                "audio_path": audio_path,
+                "transcription": None,
+                "error": str(e)
+            }
+            transcriptions.append(error_data)
 
     # Save all transcriptions to a single JSON file
-    output_file_path = os.path.join(output_dir, "transcriptions.json")
+    output_file_path = os.path.join(output_dir, "transcriptions_openai.json")
     with open(output_file_path, 'w', encoding='utf-8') as f:
         json.dump(transcriptions, f, ensure_ascii=False, indent=4)
 

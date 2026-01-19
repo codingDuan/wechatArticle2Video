@@ -17,11 +17,10 @@ class Settings(BaseSettings):
 
     # OpenAI Configuration
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    OPENAI_WHISPER_MODEL: str = os.getenv("OPENAI_WHISPER_MODEL", "whisper-1")
     OPENAI_FINETUNE_MODEL_ID: str = os.getenv("OPENAI_FINETUNE_MODEL_ID", "")
 
-    # Google Gemini Configuration
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY")
-    GEMINI_FINETUNE_MODEL_ID: str = os.getenv("GEMINI_FINETUNE_MODEL_ID", "")
+
 
     class Config:
         case_sensitive = True
