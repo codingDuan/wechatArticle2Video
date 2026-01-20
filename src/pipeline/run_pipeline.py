@@ -4,7 +4,7 @@ import os
 # This MUST be set before any other imports, especially before tensorflow or torch
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
-import boto3
+# import boto3
 import sys
 import uuid
 
@@ -27,12 +27,12 @@ from src.pipeline.steps import (
     step_08_format_for_finetune as _08_format_for_finetune,
 )
 from src.pipeline.analysis import extract_style
-from src.core.config import settings
+from src.core.config import get_settings
 
 
 def upload_to_s3(local_path: str, s3_key: str):
     """Placeholder for uploading a file to S3."""
-    print(f"Uploading {local_path} to s3://{settings.S3_BUCKET_NAME}/{s3_key}")
+    print(f"Uploading {local_path} to s3://{get_settings().S3_BUCKET_NAME}/{s3_key}")
     # s3_client = boto3.client("s3", region_name=settings.AWS_REGION,
     #                          aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
     #                          aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)

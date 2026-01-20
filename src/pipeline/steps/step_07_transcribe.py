@@ -1,7 +1,7 @@
 import os
 import json
 import openai
-from src.core.config import settings
+from src.core.config import get_settings
 
 def transcribe_audio(audio_paths: list[str], output_dir: str, model_name: str = None) -> str:
     """
@@ -11,14 +11,14 @@ def transcribe_audio(audio_paths: list[str], output_dir: str, model_name: str = 
     The model can be specified as a parameter or configured in the .env file
     via OPENAI_WHISPER_MODEL.
     """
-    api_key = settings.OPENAI_API_KEY
+    api_key = get_settings().OPENAI_API_KEY
     if not api_key:
         raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
 
     client = openai.OpenAI(api_key=api_key)
     
     # Use the provided model_name or fall back to the one from settings
-    whisper_model = model_name if model_name else settings.OPENAI_WHISPER_MODEL
+    whisper_model = model_name if model_name else get_settings().OPENAI_WHISPER_MODEL
     
     print(f"Starting transcription for {len(audio_paths)} audio segments using OpenAI model: {whisper_model}...")
 

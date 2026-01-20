@@ -25,5 +25,6 @@ class Settings(BaseSettings):
     class Config:
         case_sensitive = True
 
-
-settings = Settings()
+# Function to get settings, allowing for dynamic reloading of environment variables
+def get_settings() -> Settings:
+    return Settings()

@@ -3,7 +3,7 @@ import os
 import openai
 from dotenv import load_dotenv
 
-from src.core.config import settings
+from src.core.config import get_settings
 
 # Load environment variables for API keys
 load_dotenv()
@@ -42,8 +42,9 @@ def get_llm_service() -> LLMService:
     Factory function to get the appropriate LLM service.
     Currently, only OpenAI is supported.
     """
-    provider = settings.LLM_PROVIDER
+    provider = get_settings().LLM_PROVIDER
     if provider.lower() == "openai":
         return OpenAILLMService()
     else:
         raise ValueError(f"Unsupported or misconfigured LLM provider: {provider}. Only 'openai' is supported.")
+
